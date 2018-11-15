@@ -15,11 +15,11 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    fname = db.Column(db.String(64), nullable=True)
-    lname = db.Column(db.String(64), nullable=True)
-    email = db.Column(db.String(64), nullable=True)
-    password = db.Column(db.String(64), nullable=True)
-
+    first_name = db.Column(db.String(64), nullable=False)
+    last_name = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.String(64), nullable=False)
+    token = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -67,9 +67,9 @@ class Rating(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"""<Rating rating_id={self.rating_id} 
-                    movie_id={self.movie_id} 
-                    user_id={self.user_id} 
+        return f"""<Rating rating_id={self.rating_id}
+                    movie_id={self.movie_id}
+                    user_id={self.user_id}
                     score={self.score}>"""
 
 

@@ -6,11 +6,11 @@ from flask import Flask, render_template, request, flash, redirect, session, jso
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Rating, Movie, connect_to_db, db
 import requests
-
+import secrets
 
 
 app = Flask(__name__)
-
+connect_to_db(app)
 # app.jinja_env.undefined = StrictUndefined
 
 
@@ -62,6 +62,7 @@ def get_test():
 
     return render_template('homepage_search_by_id.html')
 
+
 @app.route('/search_by_id')
 def search_test():
     searchid = request.args.get('s_id', '')
@@ -75,11 +76,28 @@ def search_test():
     #               image_url=image_url)
     # db.session.add(movie)
     # db.session.commit()
-    return jsonify(movies=movie_desc)    
+    return jsonify(movies=movie_desc)
 
 
+@app.route('/api/registration', methods=['POST'])
+def registration():
 
-
+    data = { #crearing data, will be accessed with data[email]
+        'email': request.json['email'],
+        'password': request.json['password'],
+        'first_name': request.json['first_name'],
+        'last_name': request.json['last_name'],
+    }
+    token = secrets.token_hex()#generating tokens
+    user = User(email=data['email'],
+                password=data['password'],
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                token=token
+                )
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(data), 201
 
 
 if __name__ == '__main__':
