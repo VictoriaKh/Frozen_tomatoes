@@ -1,13 +1,12 @@
-"""Models and database functions."""
-
 from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
 
+movies_to_users = db.Table('movies_to_users',
+                                 db.Column('movie_id', db.String(20), db.ForeignKey('movies.id')),
+                                 db.Column('user_id', db.Integer, db.ForeignKey('users.id')))
 
-##############################################################################
-# Model definitions
 
 class User(db.Model):
     """User of movies website."""
@@ -20,6 +19,7 @@ class User(db.Model):
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
     token = db.Column(db.String(64), nullable=False)
+    movies = db.relationship('Movie', backref='movies', lazy='dynamic', secondary=movies_to_users)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -38,6 +38,9 @@ class Movie(db.Model):
     genre = db.Column(db.String(200))
     imdb_rating = db.Column(db.String(100))
     image_url = db.Column(db.String(200))
+
+    _users = db.relationship('User', secondary=movies_to_users,
+                             backref=db.backref('movies_to_users_backref', lazy='dynamic'))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -74,7 +77,6 @@ class Rating(db.Model):
 
 
 ##############################################################################
-# Helper functions
 
 def connect_to_db(app):
     """Connect the database to our Flask app."""
@@ -93,3 +95,28 @@ if __name__ == "__main__":
     from server import app
     connect_to_db(app)
     print("Connected to DB.")
+# Helper functions
+
+# def connect_to_db(app):
+#     """Connect the database to our Flask app."""
+
+#     # Configure to use our PostgreSQL database
+#     POSTGRES = {
+#         'user': 'postgres',
+#         'db': 'ratings',
+#         'host': 'localhost',
+#         'port': '5432',
+#     }
+#     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+#     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#     db.app = app
+#     db.init_app(app)
+
+
+# if __name__ == "__main__":
+#     # As a convenience, if we run this module interactively, it will leave
+#     # you in a state of being able to work with the database directly.
+
+#     from server import app
+#     connect_to_db(app)
+#     print("Connected to DB.")
