@@ -1,0 +1,16 @@
+.logoutLblPos{
+
+   position:fixed;
+   right:10px;
+   top:5px;
+}
+.searchFormPos{
+
+   position:fixed;
+   right:10px;
+   top:5px;
+}
+#test {
+
+        display: inline-block;
+}

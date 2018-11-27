@@ -5,13 +5,18 @@ from model import User, Rating, Movie, connect_to_db, db
 import requests
 from flask_marshmallow import Marshmallow
 import secrets
+import os
 
 
 app = Flask(__name__)
+app.secret_key = 'SECRET123'
+
 api = Api(app)
 connect_to_db(app)
 ma = Marshmallow(app)
-API_KEY = 'ff058cb3'
+
+
+API_KEY = os.getenv('API_KEY')
 
 
 class UserSchema(ma.Schema):
@@ -30,46 +35,57 @@ movies_schema = MovieSchema(many=True)
 
 
 @app.route('/')
-def index():
-    """Homepage."""
+def index_page():
+    """Homepage"""
+    if session.get('email'):
+        return render_template('index.html')
+    return redirect('/login')
 
-    return render_template('homepage_search.html')
 
-
-@app.route('/login_homepage')
-def login_page():
+@app.route('/registration')
+def registration_page():
     """Login page"""
-    return render_template('homepage.html')
+    if session.get('email'):
+        return redirect('/')
+    return render_template('registration.html')
 
 
-@app.route('/search')
+@app.route('/login')
+def login_page():
+    if session.get('email'):
+        return redirect('/')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout_page():
+    session.pop('email', None)
+    return redirect('/login')
+
+
+@app.route('/search', methods=['POST', 'GET'])
 def get():
-    searchword = request.args.get('s', '')
-    r = requests.get('http://www.omdbapi.com/?s={}&apikey={}'.format(searchword, API_KEY))
-    movie_desc = r.json()
-    return jsonify(movies=movie_desc)
+    search_word = request.args.get('s', '')
+    movie_id = request.form.get('movie_id', None)
+    r = requests.get('http://www.omdbapi.com/?s={}&i={}&apikey={}'.format(search_word, movie_id, API_KEY))
+    if search_word:
+        return render_template('search_results.html', movies=r.json())
+    else:
+        return jsonify(r.json())
 
 
-@app.route('/test')
-def get_test():
-    """Homepage."""
-    return render_template('homepage_search_by_id.html')
-
-
-@app.route('/search_by_id')
-def search_test():
-    searchid = request.args.get('s_id', '')
-    r = requests.get('http://www.omdbapi.com/?i={}&apikey={}'.format(searchid, API_KEY))
-    movie_desc = r.json()
-    # movie = Movie(id=id,
-    #               title=title,
-    #               year=year,
-    #               genre=genre,
-    #               imdb_rating=imdb_rating,
-    #               image_url=image_url)
-    # db.session.add(movie)
-    # db.session.commit()
-    return jsonify(movies=movie_desc)    
+@app.route('/api/login', methods=['POST'])
+def login():
+    email = request.form['email']
+    password = request.form['password']
+    user = User.query.filter_by(email=email).first()
+    if password == user.password:
+        session['email'] = email
+        flash('Logged in  as {0}'.format(email))
+        return redirect('/')
+    else:
+        flash('Wrong password')
+        return redirect('/login')
 
 
 class UserAction(Resource):
@@ -89,7 +105,6 @@ class UserAction(Resource):
         user.last_name = request.json['last_name']
         user.email = request.json['email']
         user.password = request.json['password']
-
         db.session.commit()
         return user_schema.jsonify(user)
 
@@ -101,16 +116,26 @@ class Users(Resource):
         return jsonify(result.data)
 
     def post(self):
-        token = secrets.token_hex()
-        user = User(email=request.json['email'],
-                    password=request.json['password'],
-                    first_name=request.json['first_name'],
-                    last_name=request.json['last_name'],
-                    token=token
-                    )
-        db.session.add(user)
-        db.session.commit()
-        return user_schema.jsonify(user)
+        email = request.json.get('email', None)
+        password = request.json.get('password', None)
+        first_name = request.json.get('first_name', None)
+        last_name = request.json.get('last_name', None)
+        if email and password and first_name and last_name:
+            user_in_db = User.query.filter_by(email=email).first()
+            if user_in_db:
+                message = {'error': 'User already exist, please supply another email address'}
+                return custom_response(message, 400)
+            user = User(email=email,
+                        password=request.json['password'],
+                        first_name=request.json['first_name'],
+                        last_name=request.json['last_name']
+                        )
+            db.session.add(user)
+            db.session.commit()
+            res = user_schema.jsonify(user)
+            return res
+        message = {'error': 'Somethings is missing'}
+        return custom_response(message, 400)
 
 
 class UserMovieList(Resource):
@@ -132,6 +157,11 @@ class UserMovieList(Resource):
 api.add_resource(UserAction, '/api/users/<user_id>')
 api.add_resource(Users, '/api/users')
 api.add_resource(UserMovieList, '/api/users/<user_id>/movielist')
+
+
+def custom_response(res, status_code):
+    return Response(mimetype='application/json', response=json.dumps(res), status=status_code)
+
 
 
 if __name__ == '__main__':

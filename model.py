@@ -3,9 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-movies_to_users = db.Table('movies_to_users',
-                                 db.Column('movie_id', db.String(20), db.ForeignKey('movies.id')),
-                                 db.Column('user_id', db.Integer, db.ForeignKey('users.id')))
+movies_to_users = db.Table('movies_to_users', db.Column('movie_id', db.String(20), db.ForeignKey('movies.id')),
+                           db.Column('user_id', db.Integer, db.ForeignKey('users.id')))
 
 
 class User(db.Model):
@@ -16,9 +15,9 @@ class User(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     first_name = db.Column(db.String(64), nullable=False)
     last_name = db.Column(db.String(64), nullable=False)
-    email = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64), nullable=False, unique=True)
     password = db.Column(db.String(64), nullable=False)
-    token = db.Column(db.String(64), nullable=False)
+    token = db.Column(db.String(64), nullable=True)
     movies = db.relationship('Movie', backref='movies', lazy='dynamic', secondary=movies_to_users)
 
     def __repr__(self):

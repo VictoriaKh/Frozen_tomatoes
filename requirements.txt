@@ -9,3 +9,5 @@ MarkupSafe==1.0
 psycopg2-binary==2.7.5
 SQLAlchemy==1.2.8
 Werkzeug==0.14.1
+flask-restful==0.3.6
+flask-marshmallow==0.9.0

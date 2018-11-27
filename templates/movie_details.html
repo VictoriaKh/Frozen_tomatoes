@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="static/css.css">
+</head>
+<body>
+    {% for movie in movies["Search"] %}
+
+        <div><img class="class-image" src={{ movie["Poster"] }} width="145" height="180" /></div>
+        <div id="test"><h4 class="card-title">{{ movie["Title"] }}</h4></div>
+        <div id="test"><p class="card-text">{{ movie["Type"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Year"] }}</p></div>
+        <form id="test" action="/search" method="POST">
+            <input type="hidden" value={{ movie["imdbID"] }} name="movie_id" />
+            <input type="submit" value="Details">
+        </form>
+
+    {% endfor %}
+
+</body>
+</html>

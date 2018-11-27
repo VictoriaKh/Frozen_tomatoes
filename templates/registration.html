@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Frozen Tomatoes</title>
+
+</head>
+
+<body>
+    <div id="registration_form"></div>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <script type = "text/babel">
+        class MyForm extends React.Component {
+            constructor() {
+                super();
+                this.handleSubmit = this.handleSubmit.bind(this);
+            }
+
+            handleSubmit(event) {
+                event.preventDefault();
+                const data = new FormData(event.target);
+                console.log(data.values());
+                fetch('/api/users',
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        method: "POST",
+                        body: JSON.stringify({email: data.get('email'), password: data.get('password'),
+                            first_name: data.get('first_name'), last_name: data.get('last_name')})
+                    })
+                   .then(response => {
+        if (response.ok) {
+          window.location.href = '/login';
+        } else {
+          throw new Error('Something went wrong ...');
+        }
+      });
+            };
+
+            render() {
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        <label htmlFor="email">Email: </label>
+                        <input id="email" name="email" type="email" />
+                        <p></p>
+                        <label htmlFor="password">Password: </label>
+                        <input id="password" name="password" type="password" />
+                        <p></p>
+                        <label htmlFor="first_name">First name: </label>
+                        <input id="first_name" name="first_name" type="text" />
+                        <p></p>
+                        <label htmlFor="last_name">Last name: </label>
+                        <input id="last_name" name="last_name" type="text" />
+                        <p></p>
+                        <button>Sign up</button>
+                    </form>
+                );
+            }
+        }
+        ReactDOM.render(
+            <MyForm />,
+            document.getElementById('registration_form')
+        );
+    </script>
+</body>
+</html>
