@@ -3,20 +3,27 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Frozen Tomatoes</title>
+    <title>Frozen Tomatoes</title>
+    <link rel="stylesheet" type="text/css" href="static/bootstrap.css">
 
 </head>
 
 <body>
-<form action="/api/login" method="POST">
-    Email:
-    <input type="email" name="email">
-    <p>
-    Password:
-    <input type="password" name="password">
-    <p>
-    <input type="submit" value="Login">
-</form>
-<input type="submit" value="Register" onclick="window.location='/registration';" />
+    <div class="container">
+        <div class="jumbotron">
+            <form action="/api/login" method="POST">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+                <input type="submit" class="btn btn-info btn-xs active" value="Login">
+            </form>
+            <input type="submit" class="btn btn-info btn-xs active" value="Register" onclick="window.location='/registration';" />
+        </div>
+    </div>
 </body>
 </html>

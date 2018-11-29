@@ -4,20 +4,43 @@
 <head>
   <meta charset="utf-8">
   <title>Frozen Tomatoes</title>
+  <link rel="stylesheet" type="text/css" href="static/bootstrap.css">
+
 </head>
-
 <body>
-    <form align="right" name="logout_form" method="get" action="/logout">
-      <label class="logoutLblPos">
-      <input name="submit2" type="submit" id="submit2" value="Logout">
-      </label>
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-content" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="#" class="navbar-brand">FrozenTomatoes</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-content">
+        <ul class="nav navbar-nav">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a><form name="logout_form" method="get" action="/logout">
+              <input name="submit2" type="submit" class="btn btn-info btn-xs active" id="submit2" value="Logout"></form>
+            </a> 
+          </li>
+        </ul>  
+      </div>
+    </div>
+  </nav>
+  <label class="searchFormPos">
+    <form align="center" action="/search" method="get">Please enter movie's name: 
+      <input type="text" name="s"><br>
+      <input type="submit" class="btn btn-info btn-xs active" value="Details">
     </form>
-    <label class="searchFormPos">
-    <form align="center" action="/search" method="get">
-  Please enter movie's name: <input type="text" name="s"><br>
-  <input type="submit" value="Submit">
-    </form>
-        </label>
+  </label>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
-
 </html>

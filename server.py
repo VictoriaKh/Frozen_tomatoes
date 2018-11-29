@@ -71,7 +71,13 @@ def get():
     if search_word:
         return render_template('search_results.html', movies=r.json())
     else:
-        return jsonify(r.json())
+        return render_template('movie_details.html', movie=r.json())
+        # return jsonify(r.json())
+    # return jsonify(r.json())
+
+# @app.route('search/movie', method=['GET'])
+# def get_movie():
+#     render_template('movie_details.html')
 
 
 @app.route('/api/login', methods=['POST'])

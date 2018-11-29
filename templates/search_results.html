@@ -2,9 +2,10 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" href="static/css.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap.css">
 </head>
 <body>
+
     {% for movie in movies["Search"] %}
 
         <div><img class="class-image" src={{ movie["Poster"] }} width="145" height="180" /></div>
@@ -13,7 +14,7 @@
         <div id="test"><p class="card-text">{{ movie["Year"] }}</p></div>
         <form id="test" action="/search" method="POST">
             <input type="hidden" value={{ movie["imdbID"] }} name="movie_id" />
-            <input type="submit" value="Details">
+            <input type="submit" class="btn btn-info btn-xs active" value="Details">
         </form>
 
     {% endfor %}

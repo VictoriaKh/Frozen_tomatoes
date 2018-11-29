@@ -1,22 +1,63 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-    <link rel="stylesheet" href="static/css.css">
-</head>
-<body>
-    {% for movie in movies["Search"] %}
-
+    <head>
+    </head>
+    <body>
         <div><img class="class-image" src={{ movie["Poster"] }} width="145" height="180" /></div>
-        <div id="test"><h4 class="card-title">{{ movie["Title"] }}</h4></div>
+        
+        <div id="test">Actors:<h4 class="card-title">{{ movie["Actors"] }}</h4></div>
+        Awards:
+        <div class="card-text">{{ movie["Awards"] }}</div>
+        BoxOffice
+        <div id="test" class="card-text">{{ movie["BoxOffice"] }}</div>
+        <div id="test"><p class="card-text">{{ movie["Country"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["DVD"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Director"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Genre"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Language"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Metascore"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Plot"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Production"] }}</p>
+        <div id="test"><p class="card-text">{{ movie["Released"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Response"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Runtime"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Title"] }}</p></div>
         <div id="test"><p class="card-text">{{ movie["Type"] }}</p></div>
+        <div id="test"><p class="card-text">{{ movie["Writer"] }}</p></div>
         <div id="test"><p class="card-text">{{ movie["Year"] }}</p></div>
-        <form id="test" action="/search" method="POST">
-            <input type="hidden" value={{ movie["imdbID"] }} name="movie_id" />
-            <input type="submit" value="Details">
-        </form>
+        
+        {% for detail in movie["Ratings"] %}
 
-    {% endfor %}
+            <div id="test"><p class="card-text">{{ detail["Source"] }}</p></div>
+            <div id="test" class="card-text">{{ detail["Value"] }}</div>
+        
+        {% endfor %}
 
-</body>
+        <div id="test"><p class="card-text">{{ movie["imdbRating"] }}</p></div>
+        <br>
+            <textarea rows="4" cols="50" name="comment" form="usrform">
+            Enter text here...</textarea>
+        <div class="star-rating">
+            <input type="radio">
+            <input type="radio">
+            <input type="radio">
+            <input type="radio">
+            <input type="radio">
+            <!-- <label for="star-4" title="4 stars">
+                    <i class="active fa fa-star" aria-hidden="true"></i>
+            </label>
+            <input id="star-3" type="radio" name="rating" value="star-3">
+            <label for="star-3" title="3 stars">
+                    <i class="active fa fa-star" aria-hidden="true"></i>
+            </label>
+            <input id="star-2" type="radio" name="rating" value="star-2">
+            <label for="star-2" title="2 stars">
+                    <i class="active fa fa-star" aria-hidden="true"></i>
+            </label>
+            <input id="star-1" type="radio" name="rating" value="star-1">
+            <label for="star-1" title="1 star">
+                    <i class="active fa fa-star" aria-hidden="true"></i>
+            </label> -->
+        </div>
+    </body>
 </html>
