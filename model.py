@@ -23,7 +23,7 @@ class User(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<User user_id={self.id} email={self.email}>"
+        return f"<User user_id={self.id} email={self.email} movies {self.movies}>"
 
 
 class Movie(db.Model):
@@ -36,47 +36,34 @@ class Movie(db.Model):
     year = db.Column(db.String(100))
     genre = db.Column(db.String(200))
     imdb_rating = db.Column(db.String(100))
-    image_url = db.Column(db.String(200))
-
+    image_url = db.Column(db.String(200), nullable=True)
+    ratings = db.Column(db.String(200), default='{}')
+    rating = db.Column(db.Float, nullable=True)
     _users = db.relationship('User', secondary=movies_to_users,
                              backref=db.backref('movies_to_users_backref', lazy='dynamic'))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Movie movie_id={self.id} title={self.title}>"
+        return f"<Movie movie_id={self.id} title={self.title} rating={self.rating}>"
 
 
-class Rating(db.Model):
+class Comment(db.Model):
     """Rating of a movie by a user."""
 
-    __tablename__ = "ratings"
+    __tablename__ = "comments"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     movie_id = db.Column(db.String(20), db.ForeignKey('movies.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    comments = db.Column(db.String(500))
-    score = db.Column(db.Integer)
-
-    # Define relationship to user
+    text = db.Column(db.String(200))
     user = db.relationship("User",
-                           backref=db.backref("ratings", order_by=id))
-
-    # Define relationship to movie
+                           backref=db.backref("comments", order_by=id))
     movie = db.relationship("Movie",
-                            backref=db.backref("ratings", order_by=id))
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"""<Rating rating_id={self.rating_id}
-                    movie_id={self.movie_id}
-                    user_id={self.user_id}
-                    score={self.score}>"""
+                            backref=db.backref("comments", order_by=id))
 
 
 ##############################################################################
-
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
@@ -86,20 +73,7 @@ def connect_to_db(app):
     db.app = app
     db.init_app(app)
 
-
-if __name__ == "__main__":
-    # As a convenience, if we run this module interactively, it will leave
-    # you in a state of being able to work with the database directly.
-
-    from server import app
-    connect_to_db(app)
-    print("Connected to DB.")
-# Helper functions
-
 # def connect_to_db(app):
-#     """Connect the database to our Flask app."""
-
-#     # Configure to use our PostgreSQL database
 #     POSTGRES = {
 #         'user': 'postgres',
 #         'db': 'ratings',
@@ -112,10 +86,10 @@ if __name__ == "__main__":
 #     db.init_app(app)
 
 
-# if __name__ == "__main__":
-#     # As a convenience, if we run this module interactively, it will leave
-#     # you in a state of being able to work with the database directly.
+if __name__ == "__main__":
+    # As a convenience, if we run this module interactively, it will leave
+    # you in a state of being able to work with the database directly.
 
-#     from server import app
-#     connect_to_db(app)
-#     print("Connected to DB.")
+    from server import app
+    connect_to_db(app)
+    print("Connected to DB.")

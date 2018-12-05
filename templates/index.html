@@ -30,14 +30,19 @@
               <input name="submit2" type="submit" class="btn btn-info btn-xs active" id="submit2" value="Logout"></form>
             </a> 
           </li>
+          <li>
+            <a><form name="logout_form" method="get" action="/movielist">
+              <input name="submit3" type="submit" class="btn btn-info btn-xs active" id="submit3" value="Movie List"></form>
+            </a>
+          </li>
         </ul>  
       </div>
     </div>
   </nav>
   <label class="searchFormPos">
-    <form align="center" action="/search" method="get">Please enter movie's name: 
+    <form align="center" action="/search" method="get">Please enter movie's name:
       <input type="text" name="s"><br>
-      <input type="submit" class="btn btn-info btn-xs active" value="Details">
+      <input type="submit" class="btn btn-info btn-xs active" value="Search">
     </form>
   </label>
 <script src="https://code.jquery.com/jquery-2.1.4.js"></script>

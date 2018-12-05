@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="static/style.css">
     </head>
     <body>
         <div><img class="class-image" src={{ movie["Poster"] }} width="145" height="180" /></div>
@@ -25,6 +26,7 @@
         <div id="test"><p class="card-text">{{ movie["Type"] }}</p></div>
         <div id="test"><p class="card-text">{{ movie["Writer"] }}</p></div>
         <div id="test"><p class="card-text">{{ movie["Year"] }}</p></div>
+        <div id="test"><p class="card-text">Frozen Tomatoes Rating: {{ movie["rating"] }}</p></div>
         
         {% for detail in movie["Ratings"] %}
 
@@ -35,29 +37,36 @@
 
         <div id="test"><p class="card-text">{{ movie["imdbRating"] }}</p></div>
         <br>
-            <textarea rows="4" cols="50" name="comment" form="usrform">
-            Enter text here...</textarea>
-        <div class="star-rating">
-            <input type="radio">
-            <input type="radio">
-            <input type="radio">
-            <input type="radio">
-            <input type="radio">
-            <!-- <label for="star-4" title="4 stars">
-                    <i class="active fa fa-star" aria-hidden="true"></i>
-            </label>
-            <input id="star-3" type="radio" name="rating" value="star-3">
-            <label for="star-3" title="3 stars">
-                    <i class="active fa fa-star" aria-hidden="true"></i>
-            </label>
-            <input id="star-2" type="radio" name="rating" value="star-2">
-            <label for="star-2" title="2 stars">
-                    <i class="active fa fa-star" aria-hidden="true"></i>
-            </label>
-            <input id="star-1" type="radio" name="rating" value="star-1">
-            <label for="star-1" title="1 star">
-                    <i class="active fa fa-star" aria-hidden="true"></i>
-            </label> -->
+        COMMENTS:
+        {% for comment in comments %}
+            <div id="test"><p class="card-text">{{ comment["user_id"]["first_name"] }} {{ comment["user_id"]["last_name_name"] }} : {{ comment["text"] }}</p></div>
+        {% endfor %}
+            <form action="/comment" id="commentform" method="POST">
+                Comment:
+                <input type="text" name="text">
+                <input type="hidden" value={{ movie["imdbID"] }} name="movie_id" />
+                <input type="submit" value="Add Comment">
+            </form>
+        <form action="/rate" id="rateform" method="POST">
+        <div class="rate">
+            Rate:
+            <input type="radio" id="star5" name="rating" value="5"{{ my_rate["5"] }}/>
+            <label for="star5" title="text">5 stars</label>
+            <input type="radio" id="star4" name="rating" value="4"{{ my_rate["4"] }}/>
+            <label for="star4" title="text">4 stars</label>
+            <input type="radio" id="star3" name="rating" value="3"{{ my_rate["3"] }}/>
+            <label for="star3" title="text">3 stars</label>
+            <input type="radio" id="star2" name="rating" value="2"{{ my_rate["2"] }}/>
+            <label for="star2" title="text">2 stars</label>
+            <input type="radio" id="star1" name="rating" value="1"{{ my_rate["1"] }}/>
+            <label for="star1" title="text">1 star</label>
         </div>
+            <input type="hidden" value={{ movie["imdbID"] }} name="movie_id" />
+            <input type="submit" value="Submit">
+        </form>
+            <form id="test" action="/api/users/{{session['user_id']}}/movielist" method="POST">
+                <input type="hidden" value={{ movie["imdbID"] }} name="movie_id" />
+                <input type="submit" value="Add to list">
+            </form>
     </body>
 </html>
